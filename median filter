@@ -1,0 +1,59 @@
+#include<iostream>
+#include <opencv2/opencv.hpp>
+using namespace std;
+using namespace cv;
+void sortBlock(int window[])
+{
+    int sortir, i, j;
+    for (i = 0; i < 9; i++)
+    {
+        sortir = window[i];
+        for (j = i - 1; j >= 0 && sortir < window[j]; j--)
+        {
+            window[j + 1] = window[j];
+        }
+        window[j + 1] = sortir;
+    }
+}
+int main()
+{
+    Mat origPicture, transformPicture;
+    origPicture = imread("book.jpg");
+
+    if (!origPicture.data || origPicture.rows < 1 || origPicture.cols < 1)
+    {
+        return -1;
+    }
+    origPicture.copyTo(transformPicture);
+    int window[9];
+    for (int step = 0; step < 4; step++)
+    for (int i = 1; i < origPicture.rows; i++)
+        for (int j = 1; j < origPicture.cols; j++)
+            transformPicture.at<Vec3b>(i, j) = 0.0;
+
+    for (int step = 0; step <= 2; step++)
+    {
+        for (int i = 1; i < origPicture.rows - 1; i++)
+        {
+            for (int j = 1; j < origPicture.cols - 1; j++)
+            {
+                window[0] = origPicture.at<Vec3b>(i - 1, j - 1)[step];
+                window[1] = origPicture.at<Vec3b>(i, j - 1)[step];
+                window[2] = origPicture.at<Vec3b>(i + 1, j - 1)[step];
+                window[3] = origPicture.at<Vec3b>(i - 1, j)[step];
+                window[4] = origPicture.at<Vec3b>(i, j)[step];
+                window[5] = origPicture.at<Vec3b>(i + 1, j)[step];
+                window[6] = origPicture.at<Vec3b>(i - 1, j + 1)[step];
+                window[7] = origPicture.at<Vec3b>(i, j + 1)[step];
+                window[8] = origPicture.at<Vec3b>(i + 1, j + 1)[step];
+                sortBlock(window);
+                transformPicture.at<Vec3b>(i, j)[step] = window[4];
+            }
+        }
+}
+    namedWindow("final");
+  // imshow("final", transformPicture);
+   imwrite("image1_zern.jpg", transformPicture);
+    waitKey();
+    return 0;
+}
