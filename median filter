@@ -26,10 +26,10 @@ int main()
     }
     origPicture.copyTo(transformPicture);
     int window[9];
-    for (int step = 0; step < 4; step++)
-    for (int i = 1; i < origPicture.rows; i++)
-        for (int j = 1; j < origPicture.cols; j++)
-            transformPicture.at<Vec3b>(i, j) = 0.0;
+    for (int step = 0; step <= 2; step++)
+        for (int i = 1; i < origPicture.rows; i++)
+            for (int j = 1; j < origPicture.cols; j++)
+                transformPicture.at<Vec3b>(i, j) = 0.0;
 
     for (int step = 0; step <= 2; step++)
     {
@@ -50,10 +50,10 @@ int main()
                 transformPicture.at<Vec3b>(i, j)[step] = window[4];
             }
         }
-}
+    }
     namedWindow("final");
-  // imshow("final", transformPicture);
-   imwrite("image1_zern.jpg", transformPicture);
+    // imshow("final", transformPicture);
+    imwrite("image1_zern.jpg", transformPicture);
     waitKey();
     return 0;
 }
